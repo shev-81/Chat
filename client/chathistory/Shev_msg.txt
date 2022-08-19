@@ -1,0 +1,75 @@
+
+Shev hi
+Anna hello
+Anna как дела?
+Shev все окей
+Shev а у тебя?
+Anna да вроде все окей
+Anna эхх
+Anna ну и окей
+Anna отключился.
+Shev всем привет
+Anna приветик
+Anna пойдем гулять
+Shev нет спасибо
+Anna шепчет: hello 
+Anna шепчет: how are u? 
+Shev /auth anna anna
+Shev hi
+Anna hello
+Anna отключился.
+ddddddddd присоединился.
+aaa сменил свое имя на Shev
+ddddddddd сменил свое имя на aaa
+ddddddddd сменил свое имя на Aaa
+Aaa hi all
+Anna привет ааа
+Shev как дела?
+Aaa отключился.
+Anna отключился.
+Shev hi
+anna hello
+anna отключился.
+Anna присоединился.
+Anna отключился.
+Shev how are u?
+Anna i am fine
+Anna отключился.
+Shev hi
+Shev sdsdf
+Shev asdasd
+Anna присоединился.
+Shev Привет Аня
+Anna Привет Андрей
+Shev привет Аня
+Ulya привет Мама и папа
+Ulya всем пока
+aaa сменил свое имя на Aaaa
+Aaaa сменил свое имя на Aaa
+Aaa ddfd
+Shev hi
+Shev Ура товарищи все работает
+Anna УРААААААААА
+Shev Здарова народ!!!
+Ulya Всем приветик
+Anna Ну и я присоединяюсь ))))
+Shev привет всем!
+Anna приветик shev!
+Shev hellow
+Ulya how are u?
+Shev i am fine!
+Shev привет Уля
+Shev народ привет
+Anna привет Шеф
+Aaa Приветик Shev
+Shev Аня здравствуй
+Shev да вроде норм
+Ulya Вчсем Хай
+Anna и тебе нехварать
+Anna привет
+Aaa всем хай
+Shev ага привет
+Shev привет
+Shev hellow
+Shev как дела?
+Shev все хорошо
