@@ -48,6 +48,7 @@ public class AuthServiceBD implements AuthService {
         }
     }
 
+    @Override
     public boolean registerNewUser(String nickName, String login, String pass) {
         int result = 0;
         try {
@@ -58,7 +59,7 @@ public class AuthServiceBD implements AuthService {
         }
         return result > 0;
     }
-
+    @Override
     public boolean updateNickName(String newName, String oldName) {
         int result = 0;
         try {

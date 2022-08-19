@@ -6,15 +6,38 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 
+/**
+ * Класс, определяющий методы чтения сообщений и их обработки, в зависимости от их типов.
+ * @see Message
+ * @see ServerApp
+ */
 public class ReaderMessagesServer {
 
+    /**
+     * Логер проекта настройки определены в файле log4j2.xml папка ресурсов.
+     */
     private static final Logger LOGGER = LogManager.getLogger(ReaderMessagesServer.class);
+
+    /**
+     * Переменная для сохранения сервера.
+     */
     private final ServerApp server;
 
+    /**
+     * Конструктор ридера сохраняет в себе ссылку на сервер.
+     * @param server Сервер
+     */
     public ReaderMessagesServer(ServerApp server) {
         this.server = server;
     }
 
+    /**
+     * Получает сообщение и передает его на обработку в зависимости от типа сообщения.
+     * @param message Сообщение.
+     * @param clientHandler Слушатель.
+     * @return Истинно, но возможно и ложно если требуется выйти из цикла авторизации.
+     * @throws SQLException возможно при попытке изменить имя пользователя задействовав Базу данных.
+     */
     public boolean read(Message message, ClientHandler clientHandler) throws SQLException {
         Message.MessageType type = message.getType();
         switch (type) {
@@ -29,6 +52,12 @@ public class ReaderMessagesServer {
         return true;
     }
 
+    /**
+     * Проводит авторизацию пользователя, проверяя базу данных, а так же текущую сессию на сервере.
+     * @param message Сообщение.
+     * @param clientHandler Слушатель.
+     * @return true если авторизация пройдена успешно.
+     */
     public boolean auth(Message message, ClientHandler clientHandler){
         String nickName;
         try {
@@ -59,6 +88,13 @@ public class ReaderMessagesServer {
         }
     }
 
+    /**
+     * Регистрирует слушатель клиента на сервере, рассылает всем слушателям сообщение о
+     * подключении нового пользователя и высылает всем клиентам обновленный список пользователей сервера.
+     * @param message Сообщение.
+     * @param clientHandler Слушатель.
+     * @return false - если регистрация пользователя не прошла в сервисе регистрации.
+     */
     public boolean regUser(Message message, ClientHandler clientHandler){
         if (server.getAuthService().registerNewUser(message.getNameU(), message.getLogin(), message.getPass())) {
             clientHandler.setName(message.getNameU());
@@ -77,6 +113,11 @@ public class ReaderMessagesServer {
         }
     }
 
+    /**
+     * Отписывает слушателя из подписки с сервера, рассылает всем слушателям сообщение
+     * о выходе из сети клиента.
+     * @param clientHandler  Слушатель.
+     */
     public void end(ClientHandler clientHandler){
         server.unSubscribe(clientHandler);
         Message message = new Message(Message.MessageType.DISCONECTED);
@@ -85,9 +126,16 @@ public class ReaderMessagesServer {
         LOGGER.info("[Server]: " + clientHandler.getName() + " disconnected!");
     }
 
+    /**
+     * Изменяет имя клиента, сохраняя изменения в Базе Данных, Имя у слушателя на сервере
+     * и оповещая всех слушателей сервера об изменениях.
+     * @param message Сообщение.
+     * @param clientHandler Слушатель.
+     * @throws SQLException возможно при обращении к Базе данных.
+     */
     public void changeName(Message message, ClientHandler clientHandler) throws SQLException {
         LOGGER.info("[Server]: " + message.getNameU() + " запросил на смену имени на " + message.getToNameU());
-        boolean rezult = server.getAuthService().updateNickName(message.getToNameU(), message.getNameU());    //   String newName,  String oldName
+        boolean rezult = server.getAuthService().updateNickName(message.getToNameU(), message.getNameU());
         if (rezult) {
             clientHandler.setName(message.getToNameU());
             server.sendAll(message);
@@ -97,14 +145,27 @@ public class ReaderMessagesServer {
         }
     }
 
+    /**
+     * Посылает персональное сообщение.
+     * @param message Сообщение.
+     * @param clientHandler Слушатель.
+     */
     public void personal(Message message, ClientHandler clientHandler){
         clientHandler.sendPrivateMessage(message);
     }
 
+    /**
+     * Делает массовую рассылку.
+     * @param message Сообщение.
+     */
     public void uMessage(Message message){
         server.sendAll(message);
     }
 
+    /**
+     * Делает массовую рассылку об изменении статуса пользователя.
+     * @param message Сообщение.
+     */
     public void status (Message message){
         server.sendAll(message);
     }

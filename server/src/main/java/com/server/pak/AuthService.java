@@ -2,6 +2,9 @@ package com.server.pak;
 
 import java.sql.SQLException;
 
+/**
+ * Интерфейс предназначенный определить основные методы для работы с подключаемой базой данных.
+ */
 public interface AuthService {
     void start();
     void stop();

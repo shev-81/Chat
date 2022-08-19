@@ -1,24 +1,28 @@
-package message;
+package com.client.pak.services;
+
 
 import com.client.pak.Connection;
 import com.client.pak.Controller;
 import com.client.pak.Main;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.scene.layout.GridPane;
+import message.*;
 
 import java.net.SocketException;
 
 import static com.client.pak.Connection.TIME_COUNT;
 
-public class ReaderMessagesClient {
+public class MessageWorker {
 
-    private Controller controller;
-    private Connection connection;
+    private final Controller controller;
+    private final Connection connection;
     private Bubble chatMessage;
     private Message.MessageType type;
 
-    public ReaderMessagesClient(Controller controller, Connection connection) {
+    public MessageWorker(Controller controller, Connection connection) {
         this.controller = controller;
         this.connection = connection;
     }
@@ -38,7 +42,13 @@ public class ReaderMessagesClient {
         return true;
     }
 
-    public boolean aouthOk (Message message) throws SocketException {
+    /**
+     * @param message Принимает объект сообщения со статусом "AUTHOK"
+     * @return boolean если авторизация успешна возвращает "false" условие выхода из цикла проверки регистрации.
+     * @see Connection autorizQuestion()
+     * @throws SocketException если возникнет ошибка с сокетом.
+     */
+    private boolean aouthOk (Message message) throws SocketException {
         controller.setMyName(message.getNameU());
         Platform.runLater(() -> Main.getpStage().setTitle("Net-chat:  " + controller.getMyName()));
         controller.loadListUsers(message.getUsersList());
@@ -47,16 +57,16 @@ public class ReaderMessagesClient {
         return false;
     }
 
-    public void aouthNo () throws SocketException {
+    private void aouthNo () throws SocketException {
         connection.getSocket().setSoTimeout(TIME_COUNT);
         controller.wrongUser();
     }
 
-    public void connected (Message message){
+    private void connected (Message message){
         if (message.getNameU().equals(controller.getMyName())) {
             return;
         }
-        Platform.runLater(() -> controller.addUserInListFx(message.getNameU()));
+        Platform.runLater(() -> addUserInListFx(message.getNameU()));
         chatMessage = new Bubble(message.getNameU() + " присоединяется к чату.");
         GridPane.setHalignment(chatMessage, HPos.CENTER);
         Platform.runLater(() -> {
@@ -66,7 +76,7 @@ public class ReaderMessagesClient {
         });
     }
 
-    public void disconnected (Message message){
+    private void disconnected (Message message){
         Platform.runLater(() -> controller.removeUsers(message.getNameU()));
         chatMessage = new Bubble(message.getNameU() + " покидает чат.");
         GridPane.setHalignment(chatMessage, HPos.CENTER);
@@ -76,14 +86,14 @@ public class ReaderMessagesClient {
         });
     }
 
-    public void changeName (Message message){
+    private void changeName (Message message){
         if(!message.getNameU().equals(controller.getMyName())){
             chatMessage = new Bubble(message.getNameU() + " сменил имя на - " + message.getToNameU());
             GridPane.setHalignment(chatMessage, HPos.CENTER);
             Platform.runLater(() -> {
                 controller.removeUsers(message.getNameU());
                 controller.getMessagePanes().remove(message.getNameU());
-                controller.addUserInListFx(message.getToNameU());
+                addUserInListFx(message.getToNameU());
                 controller.getMessagePanes().put(message.getToNameU(), new MessgePane(message.getToNameU()));
                 controller.getMessagePanes().get("Общий чат").addRow(controller.getMessagePanes().get("Общий чат").getRowCount(), chatMessage);
                 controller.scrollDown();
@@ -97,7 +107,7 @@ public class ReaderMessagesClient {
         }
     }
 
-    public void personal (Message message){
+    private void personal (Message message){
         chatMessage = new Bubble(message.getNameU(), message.getText(), "");
         GridPane.setHalignment(chatMessage, HPos.LEFT);
         GridPane usePaneChat = controller.getMessagePanes().get(message.getNameU());
@@ -107,7 +117,7 @@ public class ReaderMessagesClient {
         });
     }
 
-    public void uMessage (Message message){
+    private void uMessage (Message message){
         if(message.getNameU().equals(controller.getMyName())){
             return;
         }
@@ -116,11 +126,11 @@ public class ReaderMessagesClient {
         Platform.runLater(() -> {
             controller.getMessagePanes().get("Общий чат").addRow(controller.getMessagePanes().get("Общий чат").getRowCount(), chatMessage);
             controller.scrollDown();
-            controller.saveMsgToFile(message.getNameU()+" "+message.getText());
+            controller.getFileWorker().saveMsgToFile(message.getNameU()+" "+message.getText());
         });
     }
 
-    public void status (Message message){
+    private void status (Message message){
         if(message.getNameU().equals(controller.getMyName())){
             Platform.runLater(() -> {
             controller.getStatus().setText(message.getText());
@@ -128,5 +138,14 @@ public class ReaderMessagesClient {
         }else{
             controller.upDateUserList(message);
         }
+    }
+
+    private void addUserInListFx(String userName) {
+        Platform.runLater(() -> {
+            controller.getUserList().add(new UserCell(userName, "On line"));
+            ObservableList<UserCell> users = FXCollections.observableArrayList(controller.getUserList());
+            controller.getListFx().setItems(users);
+            controller.getListFx().setCellFactory(new CellRenderer());
+        });
     }
 }

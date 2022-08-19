@@ -1,5 +1,6 @@
 package com.client.pak;
 
+import com.client.pak.services.FileWorker;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -17,12 +18,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import lombok.Data;
 import message.*;
 
-import java.io.*;
 import java.net.URL;
 import java.util.*;
 
+@Data
 public class Controller implements Initializable {
 
     private Connection connection;
@@ -33,6 +35,7 @@ public class Controller implements Initializable {
     private Map<String, GridPane> messagePanes;
     private String useNowPane;
     private Message message;
+    private FileWorker fileWorker;
 
     @FXML
     GridPane regPane;
@@ -84,6 +87,7 @@ public class Controller implements Initializable {
         messagePanes.put("Общий чат", chat);
         useNowPane = "Общий чат";
         userList = new ArrayList<>();
+        fileWorker = new FileWorker(this);
     }
 
     @FXML
@@ -105,13 +109,14 @@ public class Controller implements Initializable {
             }
             message.setNameU(myName);
             message.setText(strFromClient);
-            saveMsgToFile(myName + " " + strFromClient);
+            fileWorker.saveMsgToFile(myName + " " + strFromClient);
             connection.sendMessage(message);
             textField.clear();
             textField.requestFocus();
         }
     }
 
+    @FXML
     public void sendDisconnect(MouseEvent mouseEvent) {
         connection.sendMessage(new Message(Message.MessageType.END));
         userList.clear();
@@ -122,6 +127,7 @@ public class Controller implements Initializable {
         changeStageToAuth();
     }
 
+    @FXML
     public void changeStageToSet(MouseEvent mouseEvent) {
         Platform.runLater(() -> {
             setName.clear();
@@ -133,6 +139,7 @@ public class Controller implements Initializable {
         setPane.setVisible(true);
     }
 
+    @FXML
     public void sendStatus() {
         if (!status.getText().strip().isEmpty()) {
             Message message = new Message();
@@ -144,6 +151,7 @@ public class Controller implements Initializable {
         }
     }
 
+    @FXML
     public void enterChat(ActionEvent event) {
         if (connection == null) {
             connection = new Connection(this);
@@ -293,76 +301,9 @@ public class Controller implements Initializable {
         }
     }
 
-    public void loadAllMsg() {
-        int i;
-        String str;
-        ArrayList<String> loadMsg = new ArrayList<>();
-        File file = new File("client/chathistory/" + getMyName() + "_msg.txt");
-        if (!file.exists()) return;
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            while ((str = reader.readLine()) != null) {
-                loadMsg.add(str);
-            }
-            i = loadMsg.size() - 10;
-            i = (i <= 0) ? 0 : loadMsg.size() - 10;
-            for (; i < loadMsg.size(); i++) {
-                String[] parts = loadMsg.get(i).split("\\s+");
-                StringBuilder sb = new StringBuilder();
-                for (int j = 1; j < parts.length; j++) {
-                    sb.append(parts[j]).append(" ");
-                }
-                Bubble chatMessage = new Bubble(parts[0], sb.toString().trim(), "");
-                GridPane.setValignment(chatMessage, VPos.BOTTOM);
-                if (!parts[0].equals(getMyName())) {
-                    GridPane.setHalignment(chatMessage, HPos.LEFT);
-                } else {
-                    GridPane.setHalignment(chatMessage, HPos.RIGHT);
-                }
-                Platform.runLater(() -> chat.addRow(chat.getRowCount(), chatMessage));
-            }
-            Platform.runLater(() -> scrollDown());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveMsgToFile(String msg) {
-        try (BufferedWriter in = new BufferedWriter(new FileWriter("client/chathistory/" + getMyName() + "_msg.txt", true))) {
-            in.write(msg);
-            in.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void wrongUser() {
         Platform.runLater(() -> authMessage.setText("Wrong login or password"));
         authMessage.setVisible(true);
-    }
-
-    public Connection getConnection() {
-        return connection;
-    }
-
-    public Map<String, GridPane> getMessagePanes() {
-        return messagePanes;
-    }
-
-    public String getMyName() {
-        return myName;
-    }
-
-    public TextField getStatus() {
-        return status;
-    }
-
-    public void addUserInListFx(String userName) {
-        Platform.runLater(() -> {
-            userList.add(new UserCell(userName, "On line"));
-            ObservableList<UserCell> users = FXCollections.observableArrayList(userList);
-            listFx.setItems(users);
-            listFx.setCellFactory(new CellRenderer());
-        });
     }
 
     public void removeUsers(String userName) {
@@ -386,9 +327,5 @@ public class Controller implements Initializable {
             }
         }
         listFx.refresh();
-    }
-
-    public void setMyName(String myName) {
-        this.myName = myName;
     }
 }

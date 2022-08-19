@@ -1,8 +1,8 @@
 package com.client.pak;
 
+import com.client.pak.services.MessageWorker;
 import javafx.application.Platform;
 import message.Message;
-import message.ReaderMessagesClient;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,7 +18,7 @@ public class Connection implements Runnable {
     private ObjectOutputStream out;
     public static final int TIME_COUNT = 120000; // таймер в 2 минуты
     private Controller controller;
-    public ReaderMessagesClient readerMessages;
+    public MessageWorker readerMessages;
     private Message message;
 
     public Connection(Controller controller) {
@@ -28,9 +28,9 @@ public class Connection implements Runnable {
 
     @Override
     public void run() {
-        this.readerMessages = new ReaderMessagesClient(controller, this);
+        this.readerMessages = new MessageWorker(controller, this);
         autorizQuestion();
-        Platform.runLater(() -> controller.loadAllMsg());
+        Platform.runLater(() -> controller.getFileWorker().loadAllMsg());
         readMsg();
     }
 
