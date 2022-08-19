@@ -2,3 +2,4 @@
 /client/target/
 /server/target/
 /.idea/
+/chat-server/logs/logfile.log
