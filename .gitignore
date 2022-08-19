@@ -1,0 +1,4 @@
+# Project exclude paths
+/client/target/
+/server/target/
+/.idea/
