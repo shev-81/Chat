@@ -54,7 +54,6 @@ public class ServerApp {
      * @see ExecutorService
      * @see ServerSocket
      * @see ClientHandler
-     *
      */
     ServerApp() {
         this.clients = new ArrayList<>();
@@ -89,10 +88,9 @@ public class ServerApp {
     public String[] getClientsList() {
         StringBuilder clientsList = new StringBuilder();
         for (ClientHandler client : clients) {
-            clientsList.append(client.getName() + " ");
+            clientsList.append(client.getName()).append(" ");
         }
-        String[] parts = clientsList.toString().trim().split("\\s+");
-        return parts;
+        return clientsList.toString().trim().split("\\s+");
     }
 
     /**

@@ -11,12 +11,12 @@ import java.sql.SQLException;
  * @see Message
  * @see ServerApp
  */
-public class ReaderMessagesServer {
+public class ReaderMessages {
 
     /**
      * Логер проекта настройки определены в файле log4j2.xml папка ресурсов.
      */
-    private static final Logger LOGGER = LogManager.getLogger(ReaderMessagesServer.class);
+    private static final Logger LOGGER = LogManager.getLogger(ReaderMessages.class);
 
     /**
      * Переменная для сохранения сервера.
@@ -27,7 +27,7 @@ public class ReaderMessagesServer {
      * Конструктор ридера сохраняет в себе ссылку на сервер.
      * @param server Сервер
      */
-    public ReaderMessagesServer(ServerApp server) {
+    public ReaderMessages(ServerApp server) {
         this.server = server;
     }
 
@@ -36,9 +36,8 @@ public class ReaderMessagesServer {
      * @param message Сообщение.
      * @param clientHandler Слушатель.
      * @return Истинно, но возможно и ложно если требуется выйти из цикла авторизации.
-     * @throws SQLException возможно при попытке изменить имя пользователя задействовав Базу данных.
      */
-    public boolean read(Message message, ClientHandler clientHandler) throws SQLException {
+    public boolean read(Message message, ClientHandler clientHandler){
         Message.MessageType type = message.getType();
         switch (type) {
             case AUTH: return auth(message, clientHandler);
@@ -131,11 +130,11 @@ public class ReaderMessagesServer {
      * и оповещая всех слушателей сервера об изменениях.
      * @param message Сообщение.
      * @param clientHandler Слушатель.
-     * @throws SQLException возможно при обращении к Базе данных.
      */
-    public void changeName(Message message, ClientHandler clientHandler) throws SQLException {
+    public void changeName(Message message, ClientHandler clientHandler){
         LOGGER.info("[Server]: " + message.getNameU() + " запросил на смену имени на " + message.getToNameU());
-        boolean rezult = server.getAuthService().updateNickName(message.getToNameU(), message.getNameU());
+        boolean rezult = false;
+        rezult = server.getAuthService().updateNickName(message.getToNameU(), message.getNameU());
         if (rezult) {
             clientHandler.setName(message.getToNameU());
             server.sendAll(message);
