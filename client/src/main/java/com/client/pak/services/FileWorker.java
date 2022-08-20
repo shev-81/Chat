@@ -10,14 +10,27 @@ import message.Bubble;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Класс предназначен для загрузки истории сообщений из файлов истоирии пользователей, а так же записи истории в файлы.
+ */
 public class FileWorker {
 
-    private Controller controller;
+    /**
+     * Переменная ссылка на контроллер.
+     */
+    private final Controller controller;
 
+    /**
+     * Конструктор сохраняет ссылку на контроллер.
+     * @param controller контроллер приложения.
+     */
     public FileWorker(Controller controller) {
         this.controller = controller;
     }
 
+    /**
+     * Читает из фйала истории пользователя последние 10 сообщений пользователя и передает их контроллеру для вывода пользователю.
+     */
     public void loadAllMsg() {
         int i;
         String str;
@@ -51,6 +64,10 @@ public class FileWorker {
         }
     }
 
+    /**
+     * Записывает исорию сообщения в конец файл пользователя.
+     * @param msg Строка сообщение пользователя.
+     */
     public void saveMsgToFile(String msg) {
         try (BufferedWriter in = new BufferedWriter(new FileWriter("client/chathistory/" + controller.getMyName() + "_msg.txt", true))) {
             in.write(msg);

@@ -9,6 +9,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+/**
+ * Класс расширяет {@link Group Group} отрисовывает в приложении сообщениее пользователя. В зависимости от используемого конструктора. используются различные декорации.
+ */
 public class Bubble extends Group {
 
   private static final int PADDING = 10;

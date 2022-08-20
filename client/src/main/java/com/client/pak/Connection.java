@@ -1,6 +1,6 @@
 package com.client.pak;
 
-import com.client.pak.services.MessageWorker;
+import com.client.pak.services.ReaderMessages;
 import javafx.application.Platform;
 import message.Message;
 
@@ -11,14 +11,14 @@ import java.net.Socket;
 
 public class Connection implements Runnable {
 
-    private final String SERVER_ADDR = "localhost";  //192.168.1.205";
+    private final String SERVER_ADDR = "localhost";
     private final int SERVER_PORT = 8189;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    public static final int TIME_COUNT = 120000; // таймер в 2 минуты
-    private Controller controller;
-    public MessageWorker readerMessages;
+    public static final int TIME_COUNT = 120000;
+    private final Controller controller;
+    public ReaderMessages readerMessages;
     private Message message;
 
     public Connection(Controller controller) {
@@ -28,7 +28,7 @@ public class Connection implements Runnable {
 
     @Override
     public void run() {
-        this.readerMessages = new MessageWorker(controller, this);
+        this.readerMessages = new ReaderMessages(controller, this);
         autorizQuestion();
         Platform.runLater(() -> controller.getFileWorker().loadAllMsg());
         readMsg();

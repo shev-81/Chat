@@ -4,8 +4,6 @@ import message.Message;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.SQLException;
-
 /**
  * Класс, определяющий методы чтения сообщений и их обработки, в зависимости от их типов.
  * @see Message
@@ -133,7 +131,7 @@ public class ReaderMessages {
      */
     public void changeName(Message message, ClientHandler clientHandler){
         LOGGER.info("[Server]: " + message.getNameU() + " запросил на смену имени на " + message.getToNameU());
-        boolean rezult = false;
+        boolean rezult;
         rezult = server.getAuthService().updateNickName(message.getToNameU(), message.getNameU());
         if (rezult) {
             clientHandler.setName(message.getToNameU());

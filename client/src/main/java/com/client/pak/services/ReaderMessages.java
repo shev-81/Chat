@@ -1,6 +1,5 @@
 package com.client.pak.services;
 
-
 import com.client.pak.Connection;
 import com.client.pak.Controller;
 import com.client.pak.Main;
@@ -10,19 +9,39 @@ import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.scene.layout.GridPane;
 import message.*;
-
 import java.net.SocketException;
 
-import static com.client.pak.Connection.TIME_COUNT;
+/**
+ * Класс, определяющий методы чтения сообщений и их обработки, в зависимости от их типов.
+ */
+public class ReaderMessages {
 
-public class MessageWorker {
-
+    /**
+     * Переменная {@link Controller Controller}.
+     */
     private final Controller controller;
+
+    /**
+     * Переменная {@link Connection Connection}.
+     */
     private final Connection connection;
+
+    /**
+     * Переменная {@link Bubble Bubble}.
+     */
     private Bubble chatMessage;
+
+    /**
+     * Переменная тип сообщения {@link Message.MessageType MessageType}.
+     */
     private Message.MessageType type;
 
-    public MessageWorker(Controller controller, Connection connection) {
+    /**
+     * Конструктор сохраняет в себе ссылки на  {@link Controller Controller} и {@link Connection Connection}.
+     * @param controller Контроллер.
+     * @param connection Соединение с сетью.
+     */
+    public ReaderMessages(Controller controller, Connection connection) {
         this.controller = controller;
         this.connection = connection;
     }
@@ -43,7 +62,8 @@ public class MessageWorker {
     }
 
     /**
-     * @param message Принимает объект сообщения со статусом "AUTHOK"
+     * Принимает объект сообщения со статусом "AUTHOK"
+     * @param message Сообщение.
      * @return boolean если авторизация успешна возвращает "false" условие выхода из цикла проверки регистрации.
      * @see Connection autorizQuestion()
      * @throws SocketException если возникнет ошибка с сокетом.
@@ -57,8 +77,12 @@ public class MessageWorker {
         return false;
     }
 
+    /**
+     * Принимает объект сообщения со статусом "AUTHNO"
+     * @throws SocketException может возникать при обращении к сокету.
+     */
     private void aouthNo () throws SocketException {
-        connection.getSocket().setSoTimeout(TIME_COUNT);
+        connection.getSocket().setSoTimeout(Connection.TIME_COUNT);
         controller.wrongUser();
     }
 
@@ -132,9 +156,7 @@ public class MessageWorker {
 
     private void status (Message message){
         if(message.getNameU().equals(controller.getMyName())){
-            Platform.runLater(() -> {
-            controller.getStatus().setText(message.getText());
-            });
+            Platform.runLater(() -> controller.getStatus().setText(message.getText()));
         }else{
             controller.upDateUserList(message);
         }
