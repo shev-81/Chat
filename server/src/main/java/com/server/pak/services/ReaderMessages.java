@@ -1,5 +1,7 @@
-package com.server.pak;
+package com.server.pak.services;
 
+import com.server.pak.ClientHandler;
+import com.server.pak.ServerApp;
 import message.Message;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

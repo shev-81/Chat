@@ -1,30 +1,27 @@
-package message;
+package com.client.pak.render;
+
+import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * Класс описывающий содержимое статуса пользователя.
+ */
+@Data
 public class UserCell implements Serializable {
 
+  /**
+   * Имя пользователя.
+   */
   private String name;
+
+  /**
+   * Статус пользователя.
+   */
   private String status;
 
   public UserCell(String name, String status) {
     this.name = name;
-    this.status = status;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
     this.status = status;
   }
 

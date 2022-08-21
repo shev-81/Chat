@@ -1,5 +1,7 @@
 package com.server.pak;
 
+import com.server.pak.services.AuthService;
+import com.server.pak.services.AuthServiceBD;
 import lombok.Data;
 import message.Message;
 import org.apache.logging.log4j.Level;

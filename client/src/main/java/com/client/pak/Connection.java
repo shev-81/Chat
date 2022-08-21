@@ -3,7 +3,6 @@ package com.client.pak;
 import com.client.pak.services.ReaderMessages;
 import javafx.application.Platform;
 import message.Message;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -34,7 +33,7 @@ public class Connection implements Runnable {
         readMsg();
     }
 
-    public void openConnection() {
+    private void openConnection() {
         try {
             socket = new Socket(SERVER_ADDR, SERVER_PORT);
             out = new ObjectOutputStream(socket.getOutputStream());

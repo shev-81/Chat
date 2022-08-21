@@ -1,4 +1,4 @@
-package message;
+package com.client.pak.render;
 
 import javafx.scene.Group;
 import javafx.scene.image.Image;

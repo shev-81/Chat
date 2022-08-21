@@ -7,11 +7,22 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import message.Message;
 
+/**
+ * Класс FX приложения, Запускает UI приложения по описанию сцены
+ * приложения описанной в sample.fxml файле.
+ */
 public class Main extends Application {
     private FXMLLoader loader;
     private Controller controller;
     public static Stage pStage;
 
+    /**
+     * Выполняется при запуске приложения, сохраняет в переменных класса ссылки на
+     * Primary Stage и Controller.
+     * @param primaryStage Основная Stage приложения FX.
+     * @throws Exception Может возникать при работе с loader'ом.
+     */
+    @Override
     public void start(Stage primaryStage) throws Exception {
         pStage = primaryStage;
         loader = new FXMLLoader(getClass().getResource("/sample.fxml"));
@@ -22,10 +33,19 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Возвращает Primary Stage приложения.
+     * @return
+     */
     public static Stage getpStage() {
         return pStage;
     }
 
+    /**
+     * Выполняется перед закрытием приложения, посылает сообщение
+     * об отключении клиента и закрывает сетевое соединение.
+     */
+    @Override
     public void stop() {
         try{
             controller = loader.getController();
@@ -34,6 +54,10 @@ public class Main extends Application {
         }catch (NullPointerException e){}
     }
 
+    /**
+     * Запускает приложение.
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }

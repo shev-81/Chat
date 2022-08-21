@@ -5,13 +5,13 @@ import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.layout.GridPane;
-import message.Bubble;
+import com.client.pak.render.Bubble;
 
 import java.io.*;
 import java.util.ArrayList;
 
 /**
- * Класс предназначен для загрузки истории сообщений из файлов истоирии пользователей, а так же записи истории в файлы.
+ * Класс предназначен для загрузки истории сообщений из файлов пользователей, а так же записи истории в файлы.
  */
 public class FileWorker {
 

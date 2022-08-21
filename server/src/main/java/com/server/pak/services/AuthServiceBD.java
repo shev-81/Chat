@@ -1,4 +1,4 @@
-package com.server.pak;
+package com.server.pak.services;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -77,7 +77,7 @@ public class AuthServiceBD implements AuthService {
      * Конструктор запускает соединение с Базой данных и подгружает список пользователей.
      * Использует {@link #start start()} и {@link #loadUsers loadUsers()} методы
      */
-    AuthServiceBD() {
+    public AuthServiceBD() {
         listUser = new ArrayList<>();
         try {
             start();
