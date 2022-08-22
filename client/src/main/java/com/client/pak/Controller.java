@@ -2,7 +2,7 @@ package com.client.pak;
 
 import com.client.pak.render.Bubble;
 import com.client.pak.render.CellRenderer;
-import com.client.pak.render.MessgePane;
+import com.client.pak.render.MessagePane;
 import com.client.pak.render.UserCell;
 import com.client.pak.services.FileWorker;
 import javafx.animation.KeyFrame;
@@ -38,7 +38,7 @@ public class Controller implements Initializable {
     /**
      * Сетевое соединение.
      */
-    private Connection connection;
+    private static Connection connection = null;
 
     /**
      * Имя пользователя.
@@ -129,7 +129,7 @@ public class Controller implements Initializable {
     TextField textField;
 
     /**
-     *  Текстовое поле ввода статуса.
+     * Текстовое поле ввода статуса.
      */
     @FXML
     TextField status;
@@ -191,7 +191,8 @@ public class Controller implements Initializable {
     /**
      * Инициализирует видимость панели Авторизации пользователя, создает карту панелей для подсоединяющихся пользователей.
      * Создает {@link FileWorker FileWorker}.
-     * @param location не используемый параметр от наследуемого интерфейса.
+     *
+     * @param location  не используемый параметр от наследуемого интерфейса.
      * @param resources не используемый параметр от наследуемого интерфейса.
      */
     @Override
@@ -254,7 +255,9 @@ public class Controller implements Initializable {
         changeStageToAuth();
     }
 
-    
+    /**
+     * Переключает на панель изменения имени пользователя.
+     */
     @FXML
     public void changeStageToSet() {
         Platform.runLater(() -> {
@@ -267,9 +270,12 @@ public class Controller implements Initializable {
         setPane.setVisible(true);
     }
 
+    /**
+     * Посылает новый статус пользователя.
+     */
     @FXML
     public void sendStatus() {
-        if (!status.getText().strip().isEmpty()) {
+        if (!status.getText().isBlank()) {
             Message message = new Message();
             message.setType(Message.MessageType.STATUS);
             message.setText(status.getText());
@@ -279,16 +285,20 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Вход в чат, после ввода логана и пароля на панели авторизации. открывает соединение если его еще нет.
+     * Посылает сообщение на сервер с логином и паролем.
+     */
     @FXML
     public void enterChat() {
-        if (connection == null) {
-            connection = new Connection(this);
-            new Thread(connection).start();
-        }
         if (authLogin.getText().isEmpty() || authPassword.getText().isEmpty()) {
             authMessage.setText("Enter login and password");
             authMessage.setVisible(true);
         } else {
+            if (connection == null) {
+                connection = new Connection(this);
+                new Thread(connection).start();
+            }
             Message message = new Message(Message.MessageType.AUTH);
             message.setLogin(authLogin.getText());
             message.setPass(authPassword.getText());
@@ -296,6 +306,9 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Меняет текущую сцену на сцену авторизации.
+     */
     public void changeStageToAuth() {
         Platform.runLater(() -> {
             authLogin.clear();
@@ -308,6 +321,9 @@ public class Controller implements Initializable {
         setPane.setVisible(false);
     }
 
+    /**
+     * Меняет текущую сцену на сцену чата.
+     */
     public void changeStageToChat() {
         chatPane.setVisible(true);
         authPane.setVisible(false);
@@ -315,6 +331,9 @@ public class Controller implements Initializable {
         setPane.setVisible(false);
     }
 
+    /**
+     * Меняет текущую сцену на сцену регистрации.
+     */
     public void changeStageToReg() {
         Platform.runLater(() -> {
             regLogin.clear();
@@ -329,15 +348,20 @@ public class Controller implements Initializable {
         setPane.setVisible(false);
     }
 
+    /**
+     * Наполняет список в UI именами пользователей.
+     *
+     * @param parts масиив со списком имен пользователей в сети.
+     */
     public void loadListUsers(String[] parts) {
         listUserModel = null;
         userList.add(new UserCell("Общий чат", "посетителей"));
-        for (int i = 0; i < parts.length; i++) {
-            if (parts[i].equals(myName)) {
+        for (String part : parts) {
+            if (part.equals(myName)) {
                 continue;
             }
-            userList.add(new UserCell(parts[i], "On line"));
-            messagePanes.put(parts[i], new MessgePane(parts[i]));
+            userList.add(new UserCell(part, "On line"));
+            messagePanes.put(part, new MessagePane(part));
         }
         listUserModel = FXCollections.observableArrayList(userList);
         Platform.runLater(() -> {
@@ -346,29 +370,38 @@ public class Controller implements Initializable {
         });
     }
 
+    /**
+     * Посылает данные для регистрации нового пользователя. Передварительно
+     * проверив наличие и соответствие введенных данных.
+     */
     public void register() {
-        if (connection == null) {
-            connection = new Connection(this);
-            new Thread(connection).start();
-        }
         if (regLogin.getText().isEmpty() || regPassword.getText().isEmpty() ||
                 regPasswordRep.getText().isEmpty() || regName.getText().isEmpty()) {
             regMessage.setTextFill(Color.RED);
             regMessage.setText("Enter login, password and name");
             regMessage.setVisible(true);
-        } else if (!regPassword.getText().equals(regPasswordRep.getText())) {
+            return;
+        }
+        if (!regPassword.getText().equals(regPasswordRep.getText())) {
             regMessage.setTextFill(Color.RED);
             regMessage.setText("Passwords do not match");
             regMessage.setVisible(true);
-        } else {
-            Message message = new Message(Message.MessageType.REGUSER);
-            message.setNameU(regName.getText());
-            message.setLogin(regLogin.getText());
-            message.setPass(regPassword.getText());
-            connection.sendMessage(message);
+            return;
         }
+        if (connection == null) {
+            connection = new Connection(this);
+            new Thread(connection).start();
+        }
+        Message message = new Message(Message.MessageType.REGUSER);
+        message.setNameU(regName.getText());
+        message.setLogin(regLogin.getText());
+        message.setPass(regPassword.getText());
+        connection.sendMessage(message);
     }
 
+    /**
+     * Перемещает фокус к последней записи в чате.
+     */
     public void scrollDown() {
         final Timeline timeline = new Timeline();
         final KeyValue kv = new KeyValue(scrollPane.vvalueProperty(), 1.0);
@@ -377,15 +410,21 @@ public class Controller implements Initializable {
         timeline.play();
     }
 
+    /**
+     * Переключает панель чата к панели выбранного пользователя.
+     */
     public void moseClickOnListItem() {
         try {
             String nameUser = listFx.getSelectionModel().getSelectedItem().getName();
             scrollPane.setContent(messagePanes.get(nameUser));
             useNowPane = nameUser;
-        } catch (NullPointerException e) {
+        } catch (NullPointerException ignored) {
         }
     }
 
+    /**
+     * Изменяет старое имя пользователя на новое.
+     */
     public void saveAccChanges() {
         if (!setName.getText().isEmpty()) {
             new Thread(() -> {
@@ -429,12 +468,19 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Вызывается при неверном логине или пароле.
+     */
     public void wrongUser() {
         Platform.runLater(() -> authMessage.setText("Wrong login or password"));
         authMessage.setVisible(true);
     }
 
-    public void removeUsers(String userName) {
+    /**
+     * Удаляет пользователя из списка в UI.
+     * @param userName Имя пользователя.
+     */
+    public void removeUser(String userName) {
         for (int i = 0; i < userList.size(); i++) {
             UserCell userCell = userList.get(i);
             if (userCell.getName().equals(userName)) {
@@ -448,12 +494,20 @@ public class Controller implements Initializable {
         });
     }
 
-    public void upDateUserList(Message message) {
+    /**
+     * Обновляет статусы в списке пользователей UI.
+     * @param message Сообщение.
+     */
+    public void updateUsersListStatus(Message message) {
         for (UserCell u : userList) {
             if (u.getName().equals(message.getNameU())) {
                 u.setStatus(message.getText());
             }
         }
         listFx.refresh();
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 }

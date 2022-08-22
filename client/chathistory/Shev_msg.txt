@@ -74,3 +74,6 @@ Shev hellow
 Shev как дела?
 Shev все хорошо
 Shev hi
+shev hello
+Anna hi
+shev привет

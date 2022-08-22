@@ -5,7 +5,7 @@ import com.client.pak.Controller;
 import com.client.pak.Main;
 import com.client.pak.render.Bubble;
 import com.client.pak.render.CellRenderer;
-import com.client.pak.render.MessgePane;
+import com.client.pak.render.MessagePane;
 import com.client.pak.render.UserCell;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -31,16 +31,6 @@ public class ReaderMessages {
     private final Connection connection;
 
     /**
-     * Переменная {@link Bubble Bubble}.
-     */
-    private Bubble chatMessage;
-
-    /**
-     * Переменная тип сообщения {@link Message.MessageType MessageType}.
-     */
-    private Message.MessageType type;
-
-    /**
      * Конструктор сохраняет в себе ссылки на  {@link Controller Controller} и {@link Connection Connection}.
      * @param controller Контроллер.
      * @param connection Соединение с сетью.
@@ -50,9 +40,14 @@ public class ReaderMessages {
         this.connection = connection;
     }
 
+    /**
+     * Вызывает метод обработки, соответствующий типу сообщения.
+     * @param message Сообщение.
+     * @return true. Но при необходимости выйти из цикла прохождения авторизации кидает false.
+     * @throws SocketException может появится при обращениею к сокету.
+     */
     public boolean read(Message message) throws SocketException {
-        type = message.getType();
-        switch (type) {
+        switch (message.getType()) {
             case AUTHOK: return aouthOk (message);
             case AUTHNO: aouthNo(); break;
             case CONECTED: connected(message); break;
@@ -90,23 +85,32 @@ public class ReaderMessages {
         controller.wrongUser();
     }
 
+    /**
+     * Выполняет первичнео наполнение информацией окна чата. Определяется имя окна чата (соответствует имени пользователя),
+     * создается панель для переписки для нового подсоединившегося пользователя.
+     * @param message Сообщение.
+     */
     private void connected (Message message){
         if (message.getNameU().equals(controller.getMyName())) {
             return;
         }
         Platform.runLater(() -> addUserInListFx(message.getNameU()));
-        chatMessage = new Bubble(message.getNameU() + " присоединяется к чату.");
+        Bubble chatMessage = new Bubble(message.getNameU() + " присоединяется к чату.");
         GridPane.setHalignment(chatMessage, HPos.CENTER);
         Platform.runLater(() -> {
-            controller.getMessagePanes().put(message.getNameU(), new MessgePane(message.getNameU()));
+            controller.getMessagePanes().put(message.getNameU(), new MessagePane(message.getNameU()));
             controller.getMessagePanes().get("Общий чат").addRow(controller.getMessagePanes().get("Общий чат").getRowCount(), chatMessage);
             controller.scrollDown();
         });
     }
 
+    /**
+     * При получении сообщения, что сторонний пользователь покинул чат, удаляет запись о нем из списка пользователей.
+     * @param message Сообщение.
+     */
     private void disconnected (Message message){
-        Platform.runLater(() -> controller.removeUsers(message.getNameU()));
-        chatMessage = new Bubble(message.getNameU() + " покидает чат.");
+        Platform.runLater(() -> controller.removeUser(message.getNameU()));
+        Bubble chatMessage = new Bubble(message.getNameU() + " покидает чат.");
         GridPane.setHalignment(chatMessage, HPos.CENTER);
         Platform.runLater(() -> {
             controller.getMessagePanes().get("Общий чат").addRow(controller.getMessagePanes().get("Общий чат").getRowCount(), chatMessage);
@@ -114,29 +118,38 @@ public class ReaderMessages {
         });
     }
 
+    /**
+     * Изменяет имя пользователя, убирает старого пользователя из списка пользователей и добавляет этого же с новым именем.
+     * Удаляет панель сообщений от старого пользователя и создает новую для пользователя с новым именем.
+     * @param message Сообщение.
+     */
     private void changeName (Message message){
         if(!message.getNameU().equals(controller.getMyName())){
-            chatMessage = new Bubble(message.getNameU() + " сменил имя на - " + message.getToNameU());
+            Bubble chatMessage = new Bubble(message.getNameU() + " сменил имя на - " + message.getToNameU());
             GridPane.setHalignment(chatMessage, HPos.CENTER);
             Platform.runLater(() -> {
-                controller.removeUsers(message.getNameU());
+                controller.removeUser(message.getNameU());
                 controller.getMessagePanes().remove(message.getNameU());
                 addUserInListFx(message.getToNameU());
-                controller.getMessagePanes().put(message.getToNameU(), new MessgePane(message.getToNameU()));
+                controller.getMessagePanes().put(message.getToNameU(), new MessagePane(message.getToNameU()));
                 controller.getMessagePanes().get("Общий чат").addRow(controller.getMessagePanes().get("Общий чат").getRowCount(), chatMessage);
                 controller.scrollDown();
             });
         }else{
             Platform.runLater(() -> {
                 controller.getMessagePanes().remove(message.getNameU());
-                controller.getMessagePanes().put(message.getToNameU(), new MessgePane(message.getToNameU()));
+                controller.getMessagePanes().put(message.getToNameU(), new MessagePane(message.getToNameU()));
                 controller.setMyName(message.getToNameU());
             });
         }
     }
 
+    /**
+     * Обрабатывает персональное сообщение.
+     * @param message Сообщение.
+     */
     private void personal (Message message){
-        chatMessage = new Bubble(message.getNameU(), message.getText(), "");
+        Bubble chatMessage = new Bubble(message.getNameU(), message.getText(), "");
         GridPane.setHalignment(chatMessage, HPos.LEFT);
         GridPane usePaneChat = controller.getMessagePanes().get(message.getNameU());
         Platform.runLater(() -> {
@@ -145,6 +158,10 @@ public class ReaderMessages {
         });
     }
 
+    /**
+     * Обрабатывет сообщение адресованное всем.
+     * @param message Сообщение.
+     */
     private void uMessage (Message message){
         if(message.getNameU().equals(controller.getMyName())){
             return;
@@ -158,14 +175,22 @@ public class ReaderMessages {
         });
     }
 
+    /**
+     * Обрабатывает сообщение о смене статуса пользователя.
+     * @param message Сообщение.
+     */
     private void status (Message message){
         if(message.getNameU().equals(controller.getMyName())){
             Platform.runLater(() -> controller.getStatus().setText(message.getText()));
         }else{
-            controller.upDateUserList(message);
+            controller.updateUsersListStatus(message);
         }
     }
 
+    /**
+     * Добавляет пользователя по его имени в модель список FX.
+     * @param userName Имя пользователя.
+     */
     private void addUserInListFx(String userName) {
         Platform.runLater(() -> {
             controller.getUserList().add(new UserCell(userName, "On line"));

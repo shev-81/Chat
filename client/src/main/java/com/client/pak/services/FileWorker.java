@@ -58,7 +58,7 @@ public class FileWorker {
                 }
                 Platform.runLater(() -> controller.getChat().addRow(controller.getChat().getRowCount(), chatMessage));
             }
-            Platform.runLater(() -> controller.scrollDown());
+            Platform.runLater(controller::scrollDown);
         } catch (IOException e) {
             e.printStackTrace();
         }

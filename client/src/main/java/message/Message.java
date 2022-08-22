@@ -24,7 +24,7 @@ public class Message implements Serializable {
     }
 
     /**
-     * Пеерменная текущей даты.
+     * Перменная текущей даты.
      */
     private Date date;
 

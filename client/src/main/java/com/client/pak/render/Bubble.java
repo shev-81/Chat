@@ -26,6 +26,11 @@ public class Bubble extends Group {
   private Paint metaColor;
   private Paint bubbleColor;
 
+  /**
+   * Используется для определения свойств сообщения выводимого при присоединении
+   * нового пользователя, при дисконекте, а так же при смене имени пользователя.
+   * @param text текст сообщения.
+   */
   public Bubble(String text) {
     super();
     bubbleColor = Color.LIGHTSLATEGREY;
@@ -35,16 +40,12 @@ public class Bubble extends Group {
     paintBubble("", text, "");
   }
 
-  public Bubble(String text, String meta) {
-    super();
-    bubbleColor = Color.ROYALBLUE;
-    nameColor = Color.BLACK;
-    textColor = Color.WHITE;
-    metaColor = Color.LIGHTGRAY;
-    paintBubble("", text, meta);
-
-  }
-
+  /**
+   * Используется для определения свойств сообщения пользователей в
+   * @param name Имя пользователя.
+   * @param text Текст сообщения.
+   * @param meta Мета информация.
+   */
   public Bubble(String name, String text, String meta) {
     super();
     bubbleColor = Color.WHITESMOKE;
@@ -54,7 +55,12 @@ public class Bubble extends Group {
     paintBubble(name, text, meta);
   }
 
-
+  /**
+   * Определяет основные свойства визуализации сообщения.
+   * @param name Имя пользователя.
+   * @param text Текст сообщения.
+   * @param meta Мета информация.
+   */
   private void paintBubble(String name, String text, String meta) {
     int nameW = getWidth(name, TEXT_FONT_BOLD);
     int nameH = getHeight(name, TEXT_FONT_BOLD);

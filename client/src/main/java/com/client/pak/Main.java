@@ -12,8 +12,20 @@ import message.Message;
  * приложения описанной в sample.fxml файле.
  */
 public class Main extends Application {
+
+    /**
+     * Загрузчик FXML файла описывающего UI.
+     */
     private FXMLLoader loader;
+
+    /**
+     * Переменная {@link Controller Controller}
+     */
     private Controller controller;
+
+    /**
+     * Главная сцена приложения.
+     */
     public static Stage pStage;
 
     /**
@@ -35,7 +47,7 @@ public class Main extends Application {
 
     /**
      * Возвращает Primary Stage приложения.
-     * @return
+     * @return Primary Stage
      */
     public static Stage getpStage() {
         return pStage;
