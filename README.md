@@ -1,3 +1,5 @@
+<a href="https://shev-81.github.io/Chat"><img src="https://img.shields.io/badge/Chat-JavaDoc-green"/>  </a>
+
 # Сhat - Сетевой чат в режиме реального времени (Java IO + Java FX)
 
 ## 0. Предисловие 
