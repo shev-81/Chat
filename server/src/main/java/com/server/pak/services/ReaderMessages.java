@@ -38,8 +38,7 @@ public class ReaderMessages {
      * @return Истинно, но возможно и ложно если требуется выйти из цикла авторизации.
      */
     public boolean read(Message message, ClientHandler clientHandler){
-        Message.MessageType type = message.getType();
-        switch (type) {
+        switch (message.getType()) {
             case AUTH: return auth(message, clientHandler);
             case REGUSER: return regUser(message, clientHandler);
             case END: end(clientHandler); break;

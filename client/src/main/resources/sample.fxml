@@ -62,7 +62,7 @@
                     <font>
                         <Font name="Ubuntu" size="15.0" />
                     </font></Label>
-                <Hyperlink onAction="#changeStageToReg" style="-fx-underline: false;" text="Don't have an accaunt?" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER">
+                <Hyperlink onAction="#changeStageToReg" style="-fx-underline: false;" text="Don't have an account?" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER">
                     <font>
                         <Font name="Ubuntu" size="13.0" />
                     </font>
@@ -184,7 +184,7 @@
                         <Font size="15.0" />
                     </font>
                 </Button>
-                <Label text="GeekBrains Chat" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                <Label text="Net-Chat" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                     <font>
                         <Font name="Ubuntu Bold" size="25.0" />
                     </font>
@@ -194,7 +194,7 @@
                         <Font name="Ubuntu" size="15.0" />
                     </font>
                 </Label>
-                <Hyperlink onAction="#changeStageToAuth" prefHeight="23.0" prefWidth="219.0" style="-fx-underline: false;" text="Already have an accaunt? Sign in." GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="12" GridPane.valignment="TOP">
+                <Hyperlink onAction="#changeStageToAuth" prefHeight="23.0" prefWidth="219.0" style="-fx-underline: false;" text="Already have an account? Sign in." GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="12" GridPane.valignment="TOP">
                     <font>
                         <Font name="Ubuntu" size="13.0" />
                     </font>
