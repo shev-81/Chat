@@ -12,10 +12,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
- * Класс слушателя клиента, объект этого класса определяется для каждого нового
- * клиента подключившегося к серверу. Созданный объект этого класса выполняется
- * в отдельном потоке. Основная задача слушателя в получении сообщений и передече
- * их на обработку в ReaderMessages.
+ * Client listener class, an object of this class is defined for each new
+ * client connected to the server. The created object of this class is executed
+ * in a separate thread. The main task of the listener is to receive messages and transfer
+ * them to Reader Messages for processing.
  * @see ServerApp
  * @see java.util.concurrent.ExecutorService
  * @see ReaderMessages
@@ -24,49 +24,52 @@ import java.net.Socket;
 public class ClientHandler {
 
     /**
-     *  Переменная логера.
+     * The logger variable.
      */
     private static final Logger LOGGER = LogManager.getLogger(ClientHandler.class);
 
     /**
-     * Переменная сокет сервера.
+     * The server socket variable.
      */
     private Socket socket;
 
     /**
-     * Переменная потока ввода для чтения входящих объектов.
+     * An input stream variable for reading incoming objects.
      */
     private ObjectInputStream in;
 
     /**
-     * Переменная потока вывода для записи объектов.
+     * An output stream variable for writing objects.
      */
     private ObjectOutputStream out;
 
     /**
-     * Переменная для сохранения имени слушателя.
+     * A variable for storing the listener name.
      */
     private String name;
 
     /**
-     * Переменная ссылка на сервер - {@link ServerApp Server}.
+     * Variable server reference - {@link ServerApp Server}.
      */
     private ServerApp server;
 
     /**
-     * Переменная Ридера сообщений - {@link ReaderMessages ReaderMessages}.
+     * Message Reader Variable - {@link ReaderMessages ReaderMessages}.
      */
     private ReaderMessages readerMessages;
 
     /**
-     * Конструктор при сроздании объекта сохраняет ссылки на объекты сервера и его сокет,
-     * создает два потока ввода вывода у сокета, создает Ридер сообщений, запускает последовательно два цикла
-     * аутентификации клиента {@link #autentification autentification()} и чтения сообщений {@link #readMessages readMessages()}.
-     * @param server Сервер.
-     * @param socket Сокет соединения с клиентом.
-     * При возникновении исключений вызывается {@link #closeConnection closeConnection()}
-     * который закрывает потоки ввода вывода и сокет.
+     * When creating an object, the constructor saves references to server
+     * objects and its socket, creates two I/O streams at the socket,
+     * creates a Message Reader, runs two cycles sequentially client
+     * authentication {@link #autentification autentification()} and
+     * message reading {@link #readMessages readMessages()}.
+     * @param server The server.
+     * @param socket The socket of the connection with the client.
+     * @throws IOException When an exception occurs, {@link #closeConnection сloseConnection()}
+     * is called, which closes the I/O streams and the socket.
      */
+
     public ClientHandler(ServerApp server, Socket socket) throws IOException {
         try {
             this.server = server;
@@ -84,9 +87,10 @@ public class ClientHandler {
     }
 
     /**
-     * Аутентификация клиента. Объект сообщения передается {@link ReaderMessages Ридеру} для обработки.
+     * Client authentication. The message object is passed to
+     * {@link ReaderMessages to the Reader} for processing.
      * @throws IOException
-     * @throws ClassNotFoundException могут возникнуть при работе спотоком ввода вывода у сокета.
+     * @throws ClassNotFoundException they may occur when working with the I/O stream at the socket.
      */
     private void autentification() throws IOException, ClassNotFoundException{
         boolean chek = true;
@@ -97,9 +101,8 @@ public class ClientHandler {
     }
 
     /**
-     * Чтение входящих объектов сообщений. Сообщения передаются {@link ReaderMessages Ридеру} сообщений для последующей обработки.
-     * При возникновении исключений вызывается {@link #closeConnection closeConnection()}
-     *
+     * Reading incoming message objects. The messages are passed to {@link ReaderMessages Ридеру}
+     * for further processing. When exceptions occur, {@link #closeConnection closeConnection()}
      */
     private void readMessages(){
         boolean chek = true;
@@ -115,8 +118,8 @@ public class ClientHandler {
     }
 
     /**
-     * Посылает сообщение в поток вывода сокета.
-     * @param message Сообщение.
+     * Sends a message to the socket output stream.
+     * @param message Message.
      */
     public void sendMessage(Message message) {
         try {
@@ -128,8 +131,8 @@ public class ClientHandler {
     }
 
     /**
-     * Посылает приватное сообщение клиенту если он зарегестрирован на сервере.
-     * @param message Сообщение.
+     * Sends a private message to the client if it is registered on the server.
+     * @param message Message.
      */
     public void sendPrivateMessage(Message message) {
         if (server.isNickBusy(message.getToNameU())) {
@@ -140,7 +143,7 @@ public class ClientHandler {
     }
 
     /**
-     * Закрывает текущее соединение потоков ввода вывода и сокета.
+     * Closes the current connection of the I/O streams and the socket.
      */
     public void closeConnection() {
         try {

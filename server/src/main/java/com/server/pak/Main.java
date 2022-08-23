@@ -1,7 +1,7 @@
 package com.server.pak;
 
 /**
- * Главный класс запуска приложения.
+ * The main application launch class.
  * @see ServerApp
  * @author Shevelenko Andrey
  */

@@ -10,7 +10,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Класс расширяет {@link Group Group} отрисовывает в приложении сообщениее пользователя. В зависимости от используемого конструктора. используются различные декорации.
+ * Class extends {@link Group Group} renders the user's message in
+ * the application. Depending on the constructor used. various
+ * decorations are used.
  */
 public class Bubble extends Group {
 
@@ -27,9 +29,10 @@ public class Bubble extends Group {
   private Paint bubbleColor;
 
   /**
-   * Используется для определения свойств сообщения выводимого при присоединении
-   * нового пользователя, при дисконекте, а так же при смене имени пользователя.
-   * @param text текст сообщения.
+   * It is used to determine the properties of the message displayed
+   * when a new user joins, when a connection is made, as well as when
+   * the user name is changed.
+   * @param text the text of the message.
    */
   public Bubble(String text) {
     super();
@@ -41,10 +44,10 @@ public class Bubble extends Group {
   }
 
   /**
-   * Используется для определения свойств сообщения пользователей в
-   * @param name Имя пользователя.
-   * @param text Текст сообщения.
-   * @param meta Мета информация.
+   * Used to determine the properties of a user's message in
+   * @param name Username.
+   * @param text The text of the message.
+   * @param meta Meta-information.
    */
   public Bubble(String name, String text, String meta) {
     super();
@@ -56,10 +59,10 @@ public class Bubble extends Group {
   }
 
   /**
-   * Определяет основные свойства визуализации сообщения.
-   * @param name Имя пользователя.
-   * @param text Текст сообщения.
-   * @param meta Мета информация.
+   * Defines the basic properties of the message visualization.
+   * @param name Username.
+   * @param text The text of the message.
+   * @param meta Meta-information.
    */
   private void paintBubble(String name, String text, String meta) {
     int nameW = getWidth(name, TEXT_FONT_BOLD);

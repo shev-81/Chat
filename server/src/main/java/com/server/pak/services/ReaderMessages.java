@@ -7,35 +7,39 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Класс, определяющий методы чтения сообщений и их обработки, в зависимости от их типов.
+ * A class that defines methods for reading messages and processing them,
+ *  depending on their types.
  * @see Message
  * @see ServerApp
  */
 public class ReaderMessages {
 
     /**
-     * Логер проекта настройки определены в файле log4j2.xml папка ресурсов.
+     * The project logger settings are defined in the file log4j2.xml
+     * resource folder.
      */
     private static final Logger LOGGER = LogManager.getLogger(ReaderMessages.class);
 
     /**
-     * Переменная для сохранения сервера.
+     * A variable for saving the server.
      */
     private final ServerApp server;
 
     /**
-     * Конструктор ридера сохраняет в себе ссылку на сервер.
-     * @param server Сервер
+     * The reader's constructor stores a link to the server.
+     * @param server Server
      */
     public ReaderMessages(ServerApp server) {
         this.server = server;
     }
 
     /**
-     * Получает сообщение и передает его на обработку в зависимости от типа сообщения.
-     * @param message Сообщение.
-     * @param clientHandler Слушатель.
-     * @return Истинно, но возможно и ложно если требуется выйти из цикла авторизации.
+     * Receives a message and passes it for processing, depending on
+     * the type of message.
+     * @param message Message.
+     * @param clientHandler The listener.
+     * @return True, but it is also possible to be false if you need to
+     * exit the authorization cycle.
      */
     public boolean read(Message message, ClientHandler clientHandler){
         switch (message.getType()) {
@@ -51,10 +55,11 @@ public class ReaderMessages {
     }
 
     /**
-     * Проводит авторизацию пользователя, проверяя базу данных, а так же текущую сессию на сервере.
-     * @param message Сообщение.
-     * @param clientHandler Слушатель.
-     * @return true если авторизация пройдена успешно.
+     * Performs user authorization by checking the database, as well as the
+     * current session on the server.
+     * @param message Message.
+     * @param clientHandler The listener.
+     * @return true if authorization is successful.
      */
     public boolean auth(Message message, ClientHandler clientHandler){
         String nickName;
@@ -87,11 +92,12 @@ public class ReaderMessages {
     }
 
     /**
-     * Регистрирует слушатель клиента на сервере, рассылает всем слушателям сообщение о
-     * подключении нового пользователя и высылает всем клиентам обновленный список пользователей сервера.
-     * @param message Сообщение.
-     * @param clientHandler Слушатель.
-     * @return false - если регистрация пользователя не прошла в сервисе регистрации.
+     * Registers a client listener on the server, sends a message to all
+     * listeners about connecting a new user, and sends an updated list
+     * of server users to all clients.
+     * @param message Message.
+     * @param clientHandler The listener.
+     * @return false if the user's registration failed in the registration service.
      */
     public boolean regUser(Message message, ClientHandler clientHandler){
         if (server.getAuthService().registerNewUser(message.getNameU(), message.getLogin(), message.getPass())) {
@@ -112,9 +118,9 @@ public class ReaderMessages {
     }
 
     /**
-     * Отписывает слушателя из подписки с сервера, рассылает всем слушателям сообщение
-     * о выходе из сети клиента.
-     * @param clientHandler  Слушатель.
+     * Unsubscribes the listener from the subscription from the server, sends a message
+     * to all listeners about leaving the client's network.
+     * @param clientHandler The listener.
      */
     public void end(ClientHandler clientHandler){
         server.unSubscribe(clientHandler);
@@ -125,10 +131,11 @@ public class ReaderMessages {
     }
 
     /**
-     * Изменяет имя клиента, сохраняя изменения в Базе Данных, Имя у слушателя на сервере
-     * и оповещая всех слушателей сервера об изменениях.
-     * @param message Сообщение.
-     * @param clientHandler Слушатель.
+     * Changes the name of the client, saving the changes in the Database,
+     * the Name of the listener on the server and notifying all listeners
+     * of the server about the changes.
+     * @param message Message.
+     * @param clientHandler The listener.
      */
     public void changeName(Message message, ClientHandler clientHandler){
         LOGGER.info("[Server]: " + message.getNameU() + " запросил на смену имени на " + message.getToNameU());
@@ -144,25 +151,25 @@ public class ReaderMessages {
     }
 
     /**
-     * Посылает персональное сообщение.
-     * @param message Сообщение.
-     * @param clientHandler Слушатель.
+     * Sends a personal message.
+     * @param message Message.
+     * @param clientHandler The listener.
      */
     public void personal(Message message, ClientHandler clientHandler){
         clientHandler.sendPrivateMessage(message);
     }
 
     /**
-     * Делает массовую рассылку.
-     * @param message Сообщение.
+     * Makes a mass mailing.
+     * @param message Message.
      */
     public void uMessage(Message message){
         server.sendAll(message);
     }
 
     /**
-     * Делает массовую рассылку об изменении статуса пользователя.
-     * @param message Сообщение.
+     * Makes a mass mailing about a change in the user's status.
+     * @param message Message.
      */
     public void status (Message message){
         server.sendAll(message);

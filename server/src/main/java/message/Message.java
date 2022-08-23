@@ -1,22 +1,23 @@
 package message;
 
 import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Класс сообщений пользователя.
+ * The user's message class.
  */
 @Data
 public class Message implements Serializable {
 
     /**
-     * Переменная для сериализации и десериализации.
+     * Variable for serialization and deserialization.
      */
     private static final long serialVersionUID = 9176873029745254542L;
 
     /**
-     * Переменная тип сообщения.
+     * Variable message type.
      */
     public enum MessageType {
         AUTHOK, AUTHNO, CONECTED, DISCONECTED, CHANGENAME, PERSONAL, UMESSAGE,
@@ -24,55 +25,56 @@ public class Message implements Serializable {
     }
 
     /**
-     * Пеерменная текущей даты.
+     * Variable of the current date.
      */
     private Date date;
 
     /**
-     * Перменная Имя клиента, кто посылает сообщение.
+     * The variable is the name of the client who is sending the message.
      */
     private String nameU;
 
     /**
-     * Переменная Имя клиента, которому адресованно сообщение.
+     * The variable is the name of the client to whom the message is
+     * addressed.
      */
     private String toNameU;
 
     /**
-     * Переменная содержащая текст сообщения.
+     * A variable containing the message text.
      */
     private String text;
 
     /**
-     * Переменная Логин пользователя.
+     * The User Login variable.
      */
     private String login;
 
     /**
-     * Переменная Пароль пользователя.
+     * The user's Password variable.
      */
     private String pass;
 
     /**
-     * Переменная тип сообщения.
+     * Variable message type.
      */
     private MessageType type;
 
     /**
-     * Переменная - список пользователей.
+     * The variable is a list of users.
      */
     private String [] usersList;
 
     /**
-     * Пустой конструктор определяет текущую дату для сообщения.
+     * An empty constructor defines the current date for the message.
      */
     public Message() {
         this.date = new Date();
     }
 
     /**
-     * Типизированный контруктор определяет {@link MessageType тип сообщения}.
-     * @param type тип сообщения.
+     * The typed constructor defines the {@link MessageType message type}.
+     * @param type message type.
      */
     public Message(MessageType type) {
         this.date = new Date();

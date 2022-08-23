@@ -9,57 +9,56 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
- * Класс описывающий соединение с сервером.
+ * A class describing the connection to the server.
  */
 public class Connection implements Runnable {
 
     /**
-     * Адресс сервера.
+     * Server address.
      */
     private final String SERVER_ADDR = "localhost";
 
     /**
-     * Порт сервера.
+     * Server port.
      */
     private final int SERVER_PORT = 8189;
 
     /**
-     * Таймер закрытия сетевого соединения.
+     * Timer for closing the network connection.
      */
     public static final int TIME_COUNT = 120000;
 
     /**
-     * Сокет соединения.
+     * Connection socket.
      */
     private Socket socket;
 
     /**
-     * Входящий поток.
+     * Incoming stream.
      */
     private ObjectInputStream in;
 
     /**
-     * Исходящий поток.
+     * Outgoing flow.
      */
     private ObjectOutputStream out;
 
     /**
-     *  Контроллер приложения.
+     * Application controller.
      * @see Controller
      */
     private final Controller controller;
 
     /**
-     * Ридер сообщений.
+     * Message reader.
      * @see ReaderMessages
      */
     private final ReaderMessages readerMessages;
 
     /**
-     * Конструктор сохраняет ссылку на контроллер приложения, создает Ридер
-     * сообщений и открвает сетевое соединение.
-     * @param controller Контроллер приложения.
-     *
+     * The constructor saves a link to the application controller, creates
+     * a Message Reader and opens a network connection.
+     * @param controller Application controller.
      */
     public Connection(Controller controller) {
         this.controller = controller;
@@ -68,8 +67,8 @@ public class Connection implements Runnable {
     }
 
     /**
-     * Запускает в отдельном потоке последовательно 2 цикла чтения входящих сообщений.
-     * {@link #autorizQuestion() autorizQuestion()} и {@link #readMsg() readMsg()}.
+     * Starts 2 consecutive cycles of reading incoming messages in a separate thread.
+     * {@link #autorizQuestion() autorizQuestion()} and  {@link #readMsg() readMsg()}.
      */
     @Override
     public void run() {
@@ -78,9 +77,11 @@ public class Connection implements Runnable {
     }
 
     /**
-     * Открывает сетевое соединения и два потока ввода вывода. Запускает таймер блокировки
-     * сетевого соединения. При прохождении авторизации таймер блокировки станет бесконечным.
-     * При не прохождении авторизации и бездействии в течении 2 минут сетевое соединение будет закрыто.
+     * Opens a network connection and two I/O streams. Starts the
+     * network connection blocking timer. When authorization is
+     * completed, the lock timer will become infinite. If authorization
+     * fails and the network connection is inactive for 2 minutes,
+     * the network connection will be closed.
      */
     private void openConnection() {
         try {
@@ -94,7 +95,7 @@ public class Connection implements Runnable {
     }
 
     /**
-     * Запускает цикл проверки авторизации для пользователя.
+     * Starts the authorization verification cycle for the user.
      */
     public void autorizQuestion() {
         try {
@@ -110,7 +111,8 @@ public class Connection implements Runnable {
     }
 
     /**
-     * Запускает цикл чтения входящих сообщений. (Запускается после успешного прохождения авторизации.)
+     * Starts a cycle of reading incoming messages.
+     * (It starts after successful authorization.)
      */
     public void readMsg() {
         try {
@@ -125,8 +127,8 @@ public class Connection implements Runnable {
     }
 
     /**
-     * Посылает сообщение
-     * @param message Сообщение.
+     * Sends a message.
+     * @param message Message.
      */
     public void sendMessage(Message message) {
         try {
@@ -142,7 +144,7 @@ public class Connection implements Runnable {
     }
 
     /**
-     * Закрывает потоки ввода-вывода из сокета и сам сокет.
+     * Closes the I/O streams from the socket and the socket itself.
      */
     public void closeConnection() {
         try {

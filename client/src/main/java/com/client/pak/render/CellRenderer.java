@@ -12,7 +12,8 @@ import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 /**
- * Класс преобразующий Лист отображения из UI {@link ListView ListView} в лист {@link ListCell ListCell} .
+ * A class that converts a display Sheet from UI {@link ListView ListView}
+ * to a sheet  {@link ListCell ListCell} .
  */
 public class CellRenderer implements Callback<ListView<UserCell>, ListCell<UserCell>> {
 

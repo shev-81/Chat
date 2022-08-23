@@ -15,10 +15,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Класс запуска сервера, транспортная система обмена сообщениями основана на обмене
- * объектами между клиентом и сервером, используется сериализация и десериализация
- * объектов сообщений. (Java IO). Сервер в своей работе использует: Сервис авторизации
- * пользователей, Слушателя подсоединившегося клиента.
+ * Server startup class, the messaging transport system is based on the exchange
+ *  of objects between the client and the server, serialization and deserialization
+ *  of message objects is used. (Java IO). The server uses in its work:
+ *  The User Authorization Service, the Listener of the connected client.
  * @see AuthService
  * @see ClientHandler
  */
@@ -26,32 +26,33 @@ import java.util.concurrent.Executors;
 public class ServerApp {
 
     /**
-     * Логер проекта настройки определены в файле log4j2.xml папка ресурсов.
+     * The project logger settings are defined in the file log4j2.xml resource folder.
      */
     private static final Logger LOGGER = LogManager.getLogger(ServerApp.class);
 
     /**
-     * Список подсоединившихся слушателей клиентов.
+     * List of connected client listeners.
      * @see ClientHandler
      */
     private ArrayList<ClientHandler> clients;
 
     /**
-     * Переменная для сохранения сокета сервера.
+     * A variable for saving the server socket.
      */
     private Socket socket = null;
 
     /**
-     * Сервис авторизации пользователей.
+     * User authorization service.
      * @see AuthService
      */
     private AuthService authService;
 
     /**
-     * Конструктор создает объекты: AuthService, ExecutorService, ServerSocket
-     * и запускает внутренний цикл ждущий соединения клиента в методе - serverSocket.accept().
-     * При успешном подключении для клиента через ExecutorService выделяется новый поток и
-     * создается слушатель ClientHandler.
+     * The constructor creates objects: AuthService, ExecutorService,
+     * ServerSocket and starts an internal loop waiting for a client
+     * connection in the - ServerSocket.accept() method. Upon successful
+     * connection, a new thread is allocated for the client via
+     * ExecutorService and a ClientHandler listener is created.
      * @see AuthService
      * @see ExecutorService
      * @see ServerSocket
@@ -84,8 +85,8 @@ public class ServerApp {
     }
 
     /**
-     * Возвращает список имен клиентов сервера.
-     * @return Массив строк с именами клиентов.
+     * Returns a list of server client names.
+     * @return Array of strings with client names.
      */
     public String[] getClientsList() {
         StringBuilder clientsList = new StringBuilder();
@@ -96,9 +97,9 @@ public class ServerApp {
     }
 
     /**
-     * Возвращает слушатель клиента по его имени.
-     * @param name Имя клиента.
-     * @return Слушатель клиента.
+     * Returns the listener of the client by its name.
+     * @param name The client's name.
+     * @return The client's listener.
      */
     public ClientHandler getClient(String name) {
         for (ClientHandler client : clients) {
@@ -109,8 +110,8 @@ public class ServerApp {
     }
 
     /**
-     * Делает рассылку сообщения всем клиентам сервера.
-     * @param message Объект сообщения.
+     * Sends a message to all clients of the server.
+     * @param message The message object.
      * @see Message
      */
     public synchronized void sendAll(Message message) {
@@ -120,9 +121,9 @@ public class ServerApp {
     }
 
     /**
-     * Проверяет занят ли ник пользователя на сервере.
-     * @param nickName Ник пользователя.
-     * @return Ответ занят ли Ник пользователя.
+     * Checks whether the user's nickname is busy on the server.
+     * @param nickName User's nickname.
+     * @return The answer is whether the user's nickname is busy.
      */
     public boolean isNickBusy(String nickName) {
         for (ClientHandler client : clients) {
@@ -134,8 +135,8 @@ public class ServerApp {
     }
 
     /**
-     * Подписывает нового слушателя клиента в список слушателей сервера.
-     * @param o Слушатель клиента.
+     * Signs a new client listener to the list of server listeners.
+     * @param o The client's listener.
      * @see ClientHandler
      */
     public synchronized void subscribe(ClientHandler o) {
@@ -143,8 +144,8 @@ public class ServerApp {
     }
 
     /**
-     * Отписывает слушатель клиента из списка слушателей с сервера.
-     * @param o Слушатель клиента.
+     * Unsubscribes the client listener from the list of listeners from the server.
+     * @param o The client's listener.
      * @see ClientHandler
      */
     public synchronized void unSubscribe(ClientHandler o) {

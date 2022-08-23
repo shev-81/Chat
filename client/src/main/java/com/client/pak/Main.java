@@ -8,31 +8,32 @@ import javafx.stage.Stage;
 import message.Message;
 
 /**
- * Класс FX приложения, Запускает UI приложения по описанию сцены
- * приложения описанной в sample.fxml файле.
+ * The FX class of the application, Launches the UI of the application
+ * according to the description of the application scene described in
+ * sample.xml file.
  */
 public class Main extends Application {
 
     /**
-     * Загрузчик FXML файла описывающего UI.
+     * The loader of the XML file describing the UI.
      */
     private FXMLLoader loader;
 
     /**
-     * Переменная {@link Controller Controller}
+     * Variable {@link Controller Controller}
      */
     private Controller controller;
 
     /**
-     * Главная сцена приложения.
+     * The main stage of the application.
      */
     public static Stage pStage;
 
     /**
-     * Выполняется при запуске приложения, сохраняет в переменных класса ссылки на
-     * Primary Stage и Controller.
-     * @param primaryStage Основная Stage приложения FX.
-     * @throws Exception Может возникать при работе с loader'ом.
+     * Executed at application startup, saves references to in class variables
+     * Primary Stage and Controller.
+     * @param primaryStage The main Stage of the FX application.
+     * @throws Exception It may occur when working with the loader.
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -46,7 +47,7 @@ public class Main extends Application {
     }
 
     /**
-     * Возвращает Primary Stage приложения.
+     * Returns the Primary Stage of the application.
      * @return Primary Stage
      */
     public static Stage getpStage() {
@@ -54,8 +55,8 @@ public class Main extends Application {
     }
 
     /**
-     * Выполняется перед закрытием приложения, посылает сообщение
-     * об отключении клиента и закрывает сетевое соединение.
+     * It is executed before closing the application, sends a message
+     * about disconnecting the client and closes the network connection.
      */
     @Override
     public void stop() {
@@ -67,7 +68,7 @@ public class Main extends Application {
     }
 
     /**
-     * Запускает приложение.
+     * Launches the application.
      * @param args
      */
     public static void main(String[] args) {

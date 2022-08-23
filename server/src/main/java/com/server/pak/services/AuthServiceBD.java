@@ -8,55 +8,56 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Класс работающий с Базой Данных пользователей. Предназначен для выполнения CRUD операций над записями пользователей.
+ * A class that works with a user Database. Designed to
+ * perform CRUD operations on user records.
  */
 public class AuthServiceBD implements AuthService {
 
     /**
-     * Переменная логера.
+     * The logger variable.
      */
     private static final Logger LOGGER = LogManager.getLogger(AuthServiceBD.class);
 
     /**
-     * Список хранящий список всех пользователей из БД.
+     * A list that stores a list of all users from the database.
      */
     private final List<User> listUser;
 
     /**
-     * Соединение с БД.
+     * Connection to the database.
      */
     private static Connection connection;
 
     /**
-     * Переменная для работы с БД.
+     * A variable for working with the database.
      */
     private static Statement stmt;
 
     /**
-     * Класс пользователя.
+     * User class.
      */
     private class User {
 
         /**
-         * Переменная имя пользователя.
+         * The user name variable.
          */
         private String name;
 
         /**
-         * Переменаня логин пользователя.
+         * The user login variable.
          */
         private String login;
 
         /**
-         * Пременная пароль пользователя.
+         * The user's password variable.
          */
         private String pass;
 
         /**
-         * Параметризированный конструктор для создания объекта пользователя с
-         * @param name Имя пользователя.
-         * @param login Логин пользователя.
-         * @param pass Пароль пользователя.
+         * Parameterized constructor for creating a user object with
+         * @param name Username.
+         * @param login User login.
+         * @param pass User password.
          */
         public User(String name, String login, String pass) {
             this.name = name;
@@ -74,8 +75,9 @@ public class AuthServiceBD implements AuthService {
     }
 
     /**
-     * Конструктор запускает соединение с Базой данных и подгружает список пользователей.
-     * Использует {@link #start start()} и {@link #loadUsers loadUsers()} методы
+     * The constructor starts a connection to the Database and
+     * loads the list of users.
+     * Uses {@link #start start()} and {@link #loadUsers loadUsers()}  methods.
      */
     public AuthServiceBD() {
         listUser = new ArrayList<>();
@@ -91,11 +93,11 @@ public class AuthServiceBD implements AuthService {
     }
 
     /**
-     * Регистрирует нового пользователя, а при невозможности бросает исключение.
-     * @param nickName Имя пользователя.
-     * @param login Логин пользователя.
-     * @param pass Пароль пользователя.
-     * @return true если регистрация прошла успешно.
+     * Registers a new user, and throws an exception if it is impossible.
+     * @param nickName Username..
+     * @param login User login.
+     * @param pass The user's password.
+     * @return true if the registration was successful.
      */
     @Override
     public boolean registerNewUser(String nickName, String login, String pass) {
@@ -110,11 +112,11 @@ public class AuthServiceBD implements AuthService {
     }
 
     /**
-     * Обновляет Имя пользователя в Базе данных и списке пользователей на сервере, а при невозможности бросает исключение.
-     * @param newName Новое имя пользователя.
-     * @param oldName Старое имя пользователя.
-     * @return true если обновление прошло успешно.
-     * @throws SQLException при ошибке запроса.
+     * Updates the User Name in the Database and the list of users on the
+     * server, and throws an exception if it is impossible.
+     * @param newName New user name.
+     * @param oldName The old user name.
+     * @return true if the update was successful.
      */
     @Override
     public boolean updateNickName(String newName, String oldName) {
@@ -135,7 +137,8 @@ public class AuthServiceBD implements AuthService {
     }
 
     /**
-     * Загружает из Базы данных всех пользователей в список пользователей на сервере.
+     * Loads all users from the Database to the list of users on the
+     * server.
      * @throws SQLException при ошибке запроса.
      */
     public void loadUsers() throws SQLException {
@@ -151,8 +154,8 @@ public class AuthServiceBD implements AuthService {
     }
 
     /**
-     * Подключает соединение к Базе данных, и создает объект стэйтмент.
-     * @throws SQLException при невозможности подключиться.
+     * Connects the connection to the Database, and creates a statement
+     * object.
      */
     @Override
     public void start() {
@@ -166,7 +169,7 @@ public class AuthServiceBD implements AuthService {
     }
 
     /**
-     * Закрывает соединение с Базой данных.
+     * Closes the Database connection.
      */
     @Override
     public void stop() {
@@ -181,10 +184,10 @@ public class AuthServiceBD implements AuthService {
     }
 
     /**
-     * Возвращает Имя пользователя по его Логину и Паролю.
-     * @param login Логин пользователя.
-     * @param pass Пароль пользователя.
-     * @return Имя пользователя.
+     * Returns the user's Name by his Username and Password.
+     * @param login User login.
+     * @param pass The user's password.
+     * @return Username.
      */
     @Override
     public String getNickByLoginPass(String login, String pass) {

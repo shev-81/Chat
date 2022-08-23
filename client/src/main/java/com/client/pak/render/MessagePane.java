@@ -6,13 +6,13 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
 /**
- * Класс описывающий панель сообщений пользователей.
+ * A class describing the user message panel.
  */
 public class MessagePane extends GridPane {
 
     /**
-     * Конструктор определяет Имя панели и ее размеры.
-     * @param namePane Имя панели соответствует имени пользователя.
+     * The constructor defines the name of the panel and its dimensions.
+     * @param namePane The panel name corresponds to the user name.
      */
     public MessagePane(String namePane) {
         super();

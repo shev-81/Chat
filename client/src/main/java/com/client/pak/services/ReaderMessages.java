@@ -16,24 +16,25 @@ import message.*;
 import java.net.SocketException;
 
 /**
- * Класс, определяющий методы чтения сообщений и их обработки, в зависимости от их типов.
+ * A class that defines methods for reading messages and processing
+ * them, depending on their types.
  */
 public class ReaderMessages {
 
     /**
-     * Переменная {@link Controller Controller}.
+     * Variable {@link Controller Controller}.
      */
     private final Controller controller;
 
     /**
-     * Переменная {@link Connection Connection}.
+     * Variable {@link Connection Connection}.
      */
     private final Connection connection;
 
     /**
-     * Конструктор сохраняет в себе ссылки на  {@link Controller Controller} и {@link Connection Connection}.
-     * @param controller Контроллер.
-     * @param connection Соединение с сетью.
+     * The constructor stores references to  {@link Controller Controller} and {@link Connection Connection}.
+     * @param controller Controller.
+     * @param connection Connection to the network.
      */
     public ReaderMessages(Controller controller, Connection connection) {
         this.controller = controller;
@@ -41,10 +42,10 @@ public class ReaderMessages {
     }
 
     /**
-     * Вызывает метод обработки, соответствующий типу сообщения.
-     * @param message Сообщение.
-     * @return true. Но при необходимости выйти из цикла прохождения авторизации кидает false.
-     * @throws SocketException может появится при обращениею к сокету.
+     * Calls the processing method corresponding to the message type.
+     * @param message Message.
+     * @return true. If necessary, exit the authorization cycle throws false.
+     * @throws SocketException It may appear when accessing the socket.
      */
     public boolean read(Message message) throws SocketException {
         switch (message.getType()) {
@@ -61,11 +62,11 @@ public class ReaderMessages {
     }
 
     /**
-     * Принимает объект сообщения со статусом "AUTHOK"
-     * @param message Сообщение.
-     * @return boolean если авторизация успешна возвращает "false" условие выхода из цикла проверки регистрации.
+     * Accepts a message object with the status "AUTHOK"
+     * @param message Message.
+     * @return boolean if authorization is successful, the condition for exiting the registration verification cycle returns "false".
      * @see Connection autorizQuestion()
-     * @throws SocketException если возникнет ошибка с сокетом.
+     * @throws SocketException if there is an error with the socket.
      */
     private boolean aouthOk (Message message) throws SocketException {
         controller.setMyName(message.getNameU());
@@ -77,8 +78,8 @@ public class ReaderMessages {
     }
 
     /**
-     * Принимает объект сообщения со статусом "AUTHNO"
-     * @throws SocketException может возникать при обращении к сокету.
+     * Accepts a message object with the status "AUTHNO".
+     * @throws SocketException may occur when accessing a socket.
      */
     private void aouthNo () throws SocketException {
         connection.getSocket().setSoTimeout(Connection.TIME_COUNT);
@@ -86,9 +87,11 @@ public class ReaderMessages {
     }
 
     /**
-     * Выполняет первичнео наполнение информацией окна чата. Определяется имя окна чата (соответствует имени пользователя),
-     * создается панель для переписки для нового подсоединившегося пользователя.
-     * @param message Сообщение.
+     * Performs the initial filling of the chat window with information.
+     * The name of the chat window is determined (corresponds to the
+     * user name), a panel for correspondence is created for the newly
+     * connected user.
+     * @param message Message.
      */
     private void connected (Message message){
         if (message.getNameU().equals(controller.getMyName())) {
@@ -105,8 +108,9 @@ public class ReaderMessages {
     }
 
     /**
-     * При получении сообщения, что сторонний пользователь покинул чат, удаляет запись о нем из списка пользователей.
-     * @param message Сообщение.
+     * When receiving a message that a third-party user has left the chat,
+     * deletes the entry about him from the list of users.
+     * @param message Message.
      */
     private void disconnected (Message message){
         Platform.runLater(() -> controller.removeUser(message.getNameU()));
@@ -119,9 +123,10 @@ public class ReaderMessages {
     }
 
     /**
-     * Изменяет имя пользователя, убирает старого пользователя из списка пользователей и добавляет этого же с новым именем.
-     * Удаляет панель сообщений от старого пользователя и создает новую для пользователя с новым именем.
-     * @param message Сообщение.
+     * Changes the user name, removes the old user from the list of users
+     * and adds the same one with a new name. Deletes the message panel
+     * from the old user and creates a new one for the user with a new name.
+     * @param message Message.
      */
     private void changeName (Message message){
         if(!message.getNameU().equals(controller.getMyName())){
@@ -145,8 +150,8 @@ public class ReaderMessages {
     }
 
     /**
-     * Обрабатывает персональное сообщение.
-     * @param message Сообщение.
+     * Processes a personal message.
+     * @param message Message.
      */
     private void personal (Message message){
         Bubble chatMessage = new Bubble(message.getNameU(), message.getText(), "");
@@ -159,8 +164,8 @@ public class ReaderMessages {
     }
 
     /**
-     * Обрабатывет сообщение адресованное всем.
-     * @param message Сообщение.
+     * Processes a message addressed to everyone.
+     * @param message Message.
      */
     private void uMessage (Message message){
         if(message.getNameU().equals(controller.getMyName())){
@@ -176,8 +181,8 @@ public class ReaderMessages {
     }
 
     /**
-     * Обрабатывает сообщение о смене статуса пользователя.
-     * @param message Сообщение.
+     * Processes the message about the user status change.
+     * @param message Message.
      */
     private void status (Message message){
         if(message.getNameU().equals(controller.getMyName())){
@@ -188,8 +193,8 @@ public class ReaderMessages {
     }
 
     /**
-     * Добавляет пользователя по его имени в модель список FX.
-     * @param userName Имя пользователя.
+     * Adds a user by his name to the FX model list.
+     * @param userName Username.
      */
     private void addUserInListFx(String userName) {
         Platform.runLater(() -> {

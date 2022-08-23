@@ -27,173 +27,173 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * Класс контроллер приложения. Связывает в себе все методы приложения,
- * выполняющиеся от действий пользователя в UI приложения. Содержит ссылку
- * на текущее сетевое соединение с сервером, имя пользователя полученное после
- * прохождения регистрации.
+ * The application controller class. Binds all application methods that are executed from
+ * user actions in the application UI. Contains a link to the current network connection
+ * to the server, the user name received after registration.
  */
 @Data
 public class Controller implements Initializable {
 
     /**
-     * Сетевое соединение.
+     * Network connection.
      */
     private static Connection connection = null;
 
     /**
-     * Имя пользователя.
+     * Username.
      */
     private String myName;
 
     /**
-     * Список пользователей для отрисовки в FX модели приложения.
+     * The list of users to draw in the FX model of the application.
      */
     private ObservableList<UserCell> listUserModel;
 
     /**
-     * Список объектов описывающих статус пользователя.
+     * A list of objects describing the user's status.
      */
     private List<UserCell> userList;
 
     /**
-     * Карта панелей для индивидуальных сообщений с другими пользователями,
-     * для каждого пользователя создается отдельная панель переписки и
-     * помещается в эту карту по имени пользователя.
+     * A panel map for individual messages with other users,
+     * a separate correspondence panel is created for each user and
+     * placed in this map by user name.
      */
     private Map<String, GridPane> messagePanes;
 
     /**
-     * Имя панели используемой в текущий момент времени для общения. Определяется
-     * тем с каким пользователем идет общение. т.е. это поле содержит имя
-     * подсоединившегося к общению другого пользователя.
+     * The name of the panel currently used for communication.
+     * It is determined by which user is communicating with. i.e.,
+     * this field contains the name of another user connected to
+     * the communication.
      */
     private String useNowPane;
 
     /**
-     * Переменная ссылка на сервис работы с файлами.
+     * A variable link to the file management service.
      */
     private FileWorker fileWorker;
 
     /**
-     * Панель регистрации.
+     * Registration panel.
      */
     @FXML
     GridPane regPane;
 
     /**
-     * Поле ввода логина, при регистрации нового пользователя.
+     * Login input field, when registering a new user.
      */
     @FXML
     TextField regLogin;
 
     /**
-     * Поле ввода пароля, при регистрации нового пользователя.
+     * Password input field, when registering a new user.
      */
     @FXML
     PasswordField regPassword;
 
     /**
-     * Поле повтора ввода пароля, при регистрации нового пользователя.
+     * The password re-entry field, when registering a new user.
      */
     @FXML
     PasswordField regPasswordRep;
 
     /**
-     * Поле ввода имени, при регистрации нового пользователя.
+     * The name input field, when registering a new user.
      */
     @FXML
     TextField regName;
 
     /**
-     * Метка вывода сообщения панели регистрации.
+     * The label of the registration panel message output.
      */
     @FXML
     Label regMessage;
 
     /**
-     * Панель ScrollPane.
+     * ScrollPane panel.
      */
     @FXML
     ScrollPane scrollPane;
 
     /**
-     * Список представление FX в UI пользователя.
+     * The list is the representation of FX in the user's UI.
      */
     @FXML
     ListView<UserCell> listFx;
 
     /**
-     * Текстовое поле ввода сообщения.
+     * A text field for entering a message.
      */
     @FXML
     TextField textField;
 
     /**
-     * Текстовое поле ввода статуса.
+     * A text field for entering the status.
      */
     @FXML
     TextField status;
 
     /**
-     * Основная панель.
+     * The main panel.
      */
     @FXML
     HBox chatPane;
 
     /**
-     * Панель для переписки.
+     * A panel for correspondence.
      */
     @FXML
     GridPane chat;
 
     /**
-     * Поле для ввода логина при авторизации.
+     * A field for entering a login during authorization.
      */
     @FXML
     TextField authLogin;
 
     /**
-     * Поле для ввода пароля при авторизации.
+     * A field for entering a password during authorization.
      */
     @FXML
     PasswordField authPassword;
 
     /**
-     * Панель Авторизации.
+     * Authorization Panel.
      */
     @FXML
     GridPane authPane;
 
     /**
-     * Метка на панели авторизации.
+     * A label on the authorization panel.
      */
     @FXML
     Label authMessage;
 
     /**
-     * Панель смены ника пользователя.
+     * The panel for changing the user's nickname.
      */
     @FXML
     GridPane setPane;
 
     /**
-     * Поле ввода нового имени пользователя.
+     * The field for entering a new user name.
      */
     @FXML
     TextField setName;
 
     /**
-     * Метка вывода сообщения на панели смены имени пользователя.
+     * The label of the message output on the user name change panel.
      */
     @FXML
     Label setMessage;
 
     /**
-     * Инициализирует видимость панели Авторизации пользователя, создает карту панелей для подсоединяющихся пользователей.
-     * Создает {@link FileWorker FileWorker}.
-     *
-     * @param location  не используемый параметр от наследуемого интерфейса.
-     * @param resources не используемый параметр от наследуемого интерфейса.
+     * Initializes the visibility of the User Authorization panel, creates
+     * a panel map for connecting users.
+     * Creates {@link FileWorker FileWorker}.
+     * @param location  an unused parameter from an inherited interface.
+     * @param resources an unused parameter from an inherited interface.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -207,10 +207,10 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Реагирует на нажатие кнопки послать сообщение. Выводит сообщение на экран
-     * пользователя, сохраняет текст сообщения в файл истории пользователя, посылает
-     * сообщение в зависимости с какой панели идет сообщение пользователю с которым
-     * идет переписка.
+     * Reacts to pressing the send message button. Displays a message on
+     * the user's screen, saves the text of the message to the user's
+     * history file, sends a message depending on which panel the message
+     * is sent to the user with whom the correspondence is going on.
      */
     @FXML
     public void SendButton() {
@@ -240,9 +240,10 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Реагирует на нажатие кнопки выйти из чата. Посылает на сервер сообщение об отсоединении пользователя.
-     * Очищает списки пользователей закрываемого сеанса. Закрывает сетевое соединение и переключает панель с чата на
-     * панель авторизации.
+     * Reacts to clicking the exit chat button. Sends a message to the
+     * server about disconnecting the user. Clears the user lists of the
+     * session being closed. Closes the network connection and switches
+     * the panel from the chat to the authorization panel.
      */
     @FXML
     public void sendDisconnect() {
@@ -256,7 +257,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Переключает на панель изменения имени пользователя.
+     * Switches to the user name change panel.
      */
     @FXML
     public void changeStageToSet() {
@@ -271,7 +272,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Посылает новый статус пользователя.
+     * Sends a new user status.
      */
     @FXML
     public void sendStatus() {
@@ -286,8 +287,10 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Вход в чат, после ввода логана и пароля на панели авторизации. Открывает соединение если его еще нет.
-     * Посылает сообщение на сервер с логином и паролем.
+     * Log in to the chat after entering your username and password
+     * on the authorization panel. Opens the connection if it is not
+     * already there. Sends a message to the server with a username
+     * and password.
      */
     @FXML
     public void enterChat() {
@@ -307,7 +310,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Меняет текущую сцену на сцену авторизации.
+     * Changes the current scene to the authorization scene.
      */
     public void changeStageToAuth() {
         Platform.runLater(() -> {
@@ -322,7 +325,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Меняет текущую сцену на сцену чата.
+     * Changes the current scene to a chat scene.
      */
     public void changeStageToChat() {
         chatPane.setVisible(true);
@@ -332,7 +335,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Меняет текущую сцену на сцену регистрации.
+     * Changes the current scene to the registration scene.
      */
     public void changeStageToReg() {
         Platform.runLater(() -> {
@@ -349,9 +352,8 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Наполняет список в UI именами пользователей.
-     *
-     * @param parts масиив со списком имен пользователей в сети.
+     * Fills the list in the UI with user names.
+     * @param parts an array with a list of user names on the network.
      */
     public void loadListUsers(String[] parts) {
         listUserModel = null;
@@ -371,8 +373,8 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Посылает данные для регистрации нового пользователя. Передварительно
-     * проверив наличие и соответствие введенных данных.
+     * Sends data for registering a new user. Having previously
+     * checked the availability and compliance of the entered data.
      */
     public void register() {
         if (regLogin.getText().isEmpty() || regPassword.getText().isEmpty() ||
@@ -400,7 +402,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Перемещает фокус к последней записи в чате.
+     * Moves the focus to the last chat entry.
      */
     public void scrollDown() {
         final Timeline timeline = new Timeline();
@@ -411,7 +413,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Переключает панель чата к панели выбранного пользователя.
+     * Switches the chat panel to the panel of the selected user.
      */
     public void moseClickOnListItem() {
         try {
@@ -423,7 +425,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Изменяет старое имя пользователя на новое.
+     * Changes the old username to a new one.
      */
     public void saveAccChanges() {
         if (!setName.getText().isEmpty()) {
@@ -469,7 +471,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Вызывается при неверном логине или пароле.
+     * Called when the username or password is incorrect.
      */
     public void wrongUser() {
         Platform.runLater(() -> authMessage.setText("Wrong login or password"));
@@ -477,8 +479,8 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Удаляет пользователя из списка в UI.
-     * @param userName Имя пользователя.
+     * Removes a user from the list in the UI.
+     * @param userName Username.
      */
     public void removeUser(String userName) {
         for (int i = 0; i < userList.size(); i++) {
@@ -495,8 +497,8 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Обновляет статусы в списке пользователей UI.
-     * @param message Сообщение.
+     * Updates statuses in the list of UI users.
+     * @param message Message.
      */
     public void updateUsersListStatus(Message message) {
         for (UserCell u : userList) {

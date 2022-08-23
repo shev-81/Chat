@@ -6,17 +6,17 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
 /**
- * Класс для добавления изображения пользователя (Аватарки пользователя).
+ * A class for adding a user image (User avatars).
  */
 public class UserPicture extends Group {
 
   /**
-   * Радиус иконки пользователя.
+   * The radius of the user icon.
    */
   private static final int RADIUS = 27;
 
   /**
-   * Конструктор определяет изображение иконки и его радиус.
+   * The constructor defines the icon image and its radius.
    */
   public UserPicture() {
     Circle circle = new Circle();

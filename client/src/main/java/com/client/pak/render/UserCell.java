@@ -5,18 +5,18 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * Класс описывающий содержимое статуса пользователя.
+ * A class describing the content of the user's status.
  */
 @Data
 public class UserCell implements Serializable {
 
   /**
-   * Имя пользователя.
+   * Username.
    */
   private String name;
 
   /**
-   * Статус пользователя.
+   * User status.
    */
   private String status;
 
