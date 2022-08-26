@@ -21,8 +21,8 @@
  - JDBC
  - Мавен 3.5
  
- ![Sprite-0003](https://user-images.githubusercontent.com/89448563/186018263-44a60233-4685-4b45-956f-8ff8449acc69.gif)
 
+![prod](https://user-images.githubusercontent.com/89448563/186944021-44b68560-5e92-45f6-a553-7f0b7b67e626.gif)
 
 
 ## 1. Модуль Server
