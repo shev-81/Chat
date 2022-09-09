@@ -21,6 +21,8 @@
  - `JDBC`
  - `Мавен 3.5`
  
+  > <b>Вид программы в Production.</b>
+  
 
 ![prod](https://user-images.githubusercontent.com/89448563/186944021-44b68560-5e92-45f6-a553-7f0b7b67e626.gif)
 
