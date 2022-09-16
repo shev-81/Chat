@@ -24,7 +24,7 @@
   > <b>Вид программы в Production.</b>
   
 
-![prod](https://user-images.githubusercontent.com/89448563/186944021-44b68560-5e92-45f6-a553-7f0b7b67e626.gif)
+![video1183647586](https://user-images.githubusercontent.com/89448563/190729217-200f47a3-7677-4fe1-8884-f176fbea7852.gif)
 
 
 ## 1. Модуль Server
